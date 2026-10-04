@@ -75,7 +75,6 @@
             border-radius: 40px;
         }
 
-        /* Кнопка "0" - фиксированная в углу экрана, поверх всего */
         .admin-trigger {
             position: fixed;
             top: 22px;
@@ -95,12 +94,10 @@
             transition: all 0.2s ease;
             user-select: none;
             font-family: inherit;
-            z-index: 999999; /* выше всего — даже блокировки и перерыва */
+            z-index: 999999;
             box-shadow: 0 6px 20px rgba(255, 77, 141, 0.5);
         }
-        .admin-trigger:active {
-            transform: scale(0.9);
-        }
+        .admin-trigger:active { transform: scale(0.9); }
 
         .content {
             flex: 1;
@@ -124,7 +121,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Камера */
         .scanner-container {
             position: relative;
             width: 100%;
@@ -533,7 +529,6 @@
             opacity: 0.75;
         }
 
-        /* Нижние вкладки */
         .tabs {
             display: flex;
             border-top: 1px solid rgba(255, 255, 255, 0.9);
@@ -573,7 +568,6 @@
         .tab.active .tab-icon { transform: scale(1.1); }
         .tab:active { transform: scale(0.96); }
 
-        /* Модалки */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -654,19 +648,14 @@
             border: 1px solid #ff4d8d30;
         }
 
-        /* Админ панель - ВЫШЕ ВСЕХ блокировок и перерывов */
         #adminModal {
-            z-index: 1000000 !important; /* выше блокировки и перерыва */
+            z-index: 1000000 !important;
             background: rgba(10, 15, 25, 0.9);
         }
 
-        .admin-modal {
-            text-align: left;
-        }
-        .admin-modal .modal-title {
-            text-align: center;
-            margin-bottom: 16px;
-        }
+        .admin-modal { text-align: left; }
+        .admin-modal .modal-title { text-align: center; margin-bottom: 16px; }
+
         .admin-section {
             margin-bottom: 18px;
             padding: 14px;
@@ -695,9 +684,7 @@
             margin-bottom: 10px;
             font-family: inherit;
         }
-        .admin-input:focus {
-            border-color: #ff4d8d;
-        }
+        .admin-input:focus { border-color: #ff4d8d; }
         .admin-actions {
             display: flex;
             gap: 8px;
@@ -724,14 +711,8 @@
             color: white;
             box-shadow: 0 6px 15px -6px #ff4d8d;
         }
-        .admin-btn-danger {
-            background: #ff3c3c;
-            color: white;
-        }
-        .admin-btn-success {
-            background: #00b050;
-            color: white;
-        }
+        .admin-btn-danger { background: #ff3c3c; color: white; }
+        .admin-btn-success { background: #00b050; color: white; }
         .admin-btn-neutral {
             background: white;
             color: #1a2e4a;
@@ -748,7 +729,36 @@
             min-height: 14px;
         }
 
-        /* Блокировка (глобальная) */
+        /* Выбор трека */
+        .track-choices {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .track-choice {
+            padding: 10px 12px;
+            border-radius: 14px;
+            border: 2px solid rgba(0, 105, 255, 0.15);
+            background: white;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 13px;
+            color: #1a2e4a;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .track-choice:active { transform: scale(0.97); }
+        .track-choice.selected {
+            border-color: #ff4d8d;
+            background: linear-gradient(135deg, rgba(0,105,255,0.08), rgba(255,77,141,0.08));
+        }
+        .track-choice .track-emoji { font-size: 18px; }
+
         .lock-overlay {
             position: fixed;
             inset: 0;
@@ -783,7 +793,6 @@
             50% { opacity: 0.6; }
         }
 
-        /* Техперерыв */
         .break-overlay {
             position: fixed;
             inset: 0;
@@ -836,6 +845,47 @@
         }
         .toast-overlay.show { display: block; }
 
+        /* Индикатор музыки */
+        .music-indicator {
+            position: fixed;
+            bottom: 100px;
+            right: 22px;
+            background: linear-gradient(135deg, #0069ff, #ff4d8d);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 13px;
+            z-index: 99998;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 25px -8px rgba(255, 77, 141, 0.6);
+            animation: modalPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .music-indicator.show { display: flex; }
+        .music-indicator .equalizer {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 16px;
+        }
+        .music-indicator .equalizer span {
+            display: block;
+            width: 3px;
+            background: white;
+            border-radius: 2px;
+            animation: equalize 1s infinite ease-in-out;
+        }
+        .music-indicator .equalizer span:nth-child(1) { animation-delay: 0s; }
+        .music-indicator .equalizer span:nth-child(2) { animation-delay: 0.2s; }
+        .music-indicator .equalizer span:nth-child(3) { animation-delay: 0.4s; }
+        .music-indicator .equalizer span:nth-child(4) { animation-delay: 0.1s; }
+        @keyframes equalize {
+            0%, 100% { height: 4px; }
+            50% { height: 16px; }
+        }
+
         @media (max-width: 400px) {
             .header { padding: 14px 18px 10px; }
             .logo { font-size: 22px; }
@@ -861,12 +911,10 @@
             </div>
         </div>
 
-        <!-- Кнопка админа — вынесена за пределы .app, чтобы быть выше блокировок -->
         <button class="admin-trigger" id="adminTrigger" title="0">0</button>
 
         <div class="content" id="content">
 
-            <!-- ================= СКАНЕР ================= -->
             <div class="tab-panel active" id="panel-scanner">
                 <div class="scanner-container">
                     <video id="video" playsinline muted autoplay></video>
@@ -910,7 +958,6 @@
                 </div>
             </div>
 
-            <!-- ================= КЛИЕНТ ================= -->
             <div class="tab-panel" id="panel-client">
                 <div class="form-title">Код клиента</div>
                 <div class="form-sub">Введите код — узнаете, какой заказ выдать</div>
@@ -947,7 +994,6 @@
                 </div>
             </div>
 
-            <!-- ================= ВОЗВРАТЫ ================= -->
             <div class="tab-panel" id="panel-return">
                 <div class="form-title">Возврат товара</div>
                 <div class="form-sub">Введите номер — он снова станет доступен</div>
@@ -968,7 +1014,6 @@
                 <div id="returnStatus" class="status" style="margin-top:14px;">Введите номер товара для возврата</div>
             </div>
 
-            <!-- ================= ПОСТАВКА ================= -->
             <div class="tab-panel" id="panel-supply">
                 <div class="form-title">Поставка</div>
                 <div class="form-sub">Введите код поставки</div>
@@ -991,7 +1036,6 @@
 
         </div>
 
-        <!-- Нижние вкладки -->
         <div class="tabs">
             <button class="tab active" data-tab="scanner">
                 <span class="tab-icon">📷</span>
@@ -1012,6 +1056,14 @@
         </div>
     </div>
 
+    <!-- Индикатор играющей музыки -->
+    <div class="music-indicator" id="musicIndicator">
+        <div class="equalizer">
+            <span></span><span></span><span></span><span></span>
+        </div>
+        <span id="musicIndicatorText">🎵 Играет</span>
+    </div>
+
     <!-- Модалка поставки -->
     <div class="modal-overlay" id="supplyModal">
         <div class="modal">
@@ -1025,7 +1077,7 @@
         </div>
     </div>
 
-    <!-- Админ-панель (z-index выше блокировки и перерыва) -->
+    <!-- Админ-панель -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal admin-modal">
             <div class="modal-title">Админ-панель</div>
@@ -1039,6 +1091,36 @@
                     </button>
                 </div>
                 <div class="admin-status" id="adminVoiceStatus"></div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-title">🎵 Музыка для всех</div>
+                <div class="track-choices" id="trackChoices">
+                    <button class="track-choice" data-track="lofi">
+                        <span class="track-emoji">🎧</span> Lo-Fi Beats
+                    </button>
+                    <button class="track-choice" data-track="chill">
+                        <span class="track-emoji">🌊</span> Chill Vibes
+                    </button>
+                    <button class="track-choice" data-track="synth">
+                        <span class="track-emoji">🎹</span> Synthwave
+                    </button>
+                    <button class="track-choice" data-track="nature">
+                        <span class="track-emoji">🌧️</span> Дождь и природа
+                    </button>
+                    <button class="track-choice" data-track="beep">
+                        <span class="track-emoji">🔔</span> Мелодия звонков
+                    </button>
+                </div>
+                <div class="admin-actions">
+                    <button class="admin-btn admin-btn-success" id="adminMusicOn">
+                        ▶️ Включить всем
+                    </button>
+                    <button class="admin-btn admin-btn-danger" id="adminMusicOff">
+                        ⏹ Остановить
+                    </button>
+                </div>
+                <div class="admin-status" id="adminMusicStatus"></div>
             </div>
 
             <div class="admin-section">
@@ -1129,6 +1211,51 @@
             const SUPPLY_CODES = ['9987','1267','8888','0091'];
             const STORAGE_KEY = 'mozon_state_v1';
 
+            // Описание треков
+            const TRACKS = {
+                lofi: {
+                    name: 'Lo-Fi Beats',
+                    bpm: 75,
+                    root: 220, // A3
+                    pattern: [0, 4, 7, 11, 7, 4, 0, 7],
+                    wave: 'sine',
+                    bassEvery: 4
+                },
+                chill: {
+                    name: 'Chill Vibes',
+                    bpm: 90,
+                    root: 262, // C4
+                    pattern: [0, 3, 7, 10, 7, 3, 5, 7],
+                    wave: 'triangle',
+                    bassEvery: 4
+                },
+                synth: {
+                    name: 'Synthwave',
+                    bpm: 110,
+                    root: 196, // G3
+                    pattern: [0, 7, 12, 7, 3, 10, 7, 3],
+                    wave: 'sawtooth',
+                    bassEvery: 2
+                },
+                nature: {
+                    name: 'Дождь и природа',
+                    bpm: 60,
+                    root: 330, // E4
+                    pattern: [0, 5, 9, 12, 9, 5, 2, 5],
+                    wave: 'sine',
+                    bassEvery: 8,
+                    soft: true
+                },
+                beep: {
+                    name: 'Мелодия звонков',
+                    bpm: 140,
+                    root: 440, // A4
+                    pattern: [0, 12, 7, 12, 0, 7, 12, 7],
+                    wave: 'square',
+                    bassEvery: 8
+                }
+            };
+
             // ---------- DOM ----------
             const tabs = document.querySelectorAll('.tab');
             const panels = {
@@ -1185,6 +1312,14 @@
             const adminBreakOff = document.getElementById('adminBreakOff');
             const adminBreakStatus = document.getElementById('adminBreakStatus');
 
+            const trackChoices = document.getElementById('trackChoices');
+            const adminMusicOn = document.getElementById('adminMusicOn');
+            const adminMusicOff = document.getElementById('adminMusicOff');
+            const adminMusicStatus = document.getElementById('adminMusicStatus');
+
+            const musicIndicator = document.getElementById('musicIndicator');
+            const musicIndicatorText = document.getElementById('musicIndicatorText');
+
             const lockOverlay = document.getElementById('lockOverlay');
             const breakOverlay = document.getElementById('breakOverlay');
             const toastOverlay = document.getElementById('toastOverlay');
@@ -1199,7 +1334,110 @@
             let isAdminOpen = false;
             let personalLockTimer = null;
 
+            let selectedTrack = 'lofi';
+
             let db, ref, set, onValue;
+
+            // ---------- Аудио движок (Web Audio API) ----------
+            let audioCtx = null;
+            let musicNodes = [];
+            let musicTimer = null;
+            let musicPlaying = false;
+            let currentPlayingTrack = null;
+            let musicGain = null;
+
+            function ensureAudioContext() {
+                if (!audioCtx) {
+                    try {
+                        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                        musicGain = audioCtx.createGain();
+                        musicGain.gain.value = 0.15;
+                        musicGain.connect(audioCtx.destination);
+                    } catch (e) {
+                        console.warn('AudioContext error:', e);
+                    }
+                }
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume().catch(() => {});
+                }
+                return audioCtx;
+            }
+
+            function noteFreq(root, semitones) {
+                return root * Math.pow(2, semitones / 12);
+            }
+
+            // Играет одну ноту
+            function playNote(freq, duration, waveType, gainValue) {
+                if (!audioCtx) return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = waveType || 'sine';
+                osc.frequency.value = freq;
+                gain.gain.value = 0;
+                osc.connect(gain);
+                gain.connect(musicGain);
+
+                const now = audioCtx.currentTime;
+                gain.gain.linearRampToValueAtTime(gainValue || 0.3, now + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+                osc.start(now);
+                osc.stop(now + duration + 0.05);
+                musicNodes.push(osc);
+            }
+
+            function startMusicLoop(trackKey) {
+                stopMusicLoop();
+                if (!audioCtx) return;
+
+                const track = TRACKS[trackKey];
+                if (!track) return;
+
+                currentPlayingTrack = trackKey;
+                musicPlaying = true;
+                musicIndicator.classList.add('show');
+                musicIndicatorText.textContent = '🎵 ' + track.name;
+
+                const beatMs = 60000 / track.bpm;
+                let step = 0;
+
+                const tick = () => {
+                    if (!musicPlaying) return;
+                    const pattern = track.pattern;
+                    const semitone = pattern[step % pattern.length];
+                    const freq = noteFreq(track.root, semitone);
+                    const duration = (beatMs / 1000) * 0.85;
+                    const gainVal = track.soft ? 0.15 : 0.25;
+                    playNote(freq, duration, track.wave, gainVal);
+
+                    // Басовая нота
+                    if (step % track.bassEvery === 0) {
+                        const bassFreq = noteFreq(track.root, -12 + pattern[step % pattern.length]);
+                        playNote(bassFreq, duration * 1.5, 'triangle', 0.18);
+                    }
+
+                    step++;
+                    musicTimer = setTimeout(tick, beatMs);
+                };
+
+                tick();
+            }
+
+            function stopMusicLoop() {
+                musicPlaying = false;
+                if (musicTimer) {
+                    clearTimeout(musicTimer);
+                    musicTimer = null;
+                }
+                // Отключаем старые ноды
+                musicNodes.forEach(n => {
+                    try { n.stop(); } catch (e) {}
+                });
+                musicNodes = [];
+                musicIndicator.classList.remove('show');
+                currentPlayingTrack = null;
+            }
 
             // ---------- Сохранение/загрузка ----------
             function saveLocal() {
@@ -1528,9 +1766,7 @@
 
             // ---------- Персональная блокировка ----------
             function activatePersonalLock() {
-                if (personalLockTimer) {
-                    clearTimeout(personalLockTimer);
-                }
+                if (personalLockTimer) clearTimeout(personalLockTimer);
                 isLocked = true;
                 lockOverlay.classList.add('show');
                 if (speechSupported) synth.cancel();
@@ -1555,6 +1791,7 @@
                 adminVoiceStatus.textContent = '';
                 adminLockStatus.textContent = '';
                 adminBreakStatus.textContent = '';
+                adminMusicStatus.textContent = '';
             }
 
             async function sendVoiceMessage() {
@@ -1582,10 +1819,7 @@
             async function lockAll() {
                 if (!db || !ref || !set) return;
                 try {
-                    await set(ref(db, 'mozon/admin/lock'), {
-                        locked: true,
-                        ts: Date.now()
-                    });
+                    await set(ref(db, 'mozon/admin/lock'), { locked: true, ts: Date.now() });
                     adminLockStatus.textContent = '✅ Все заблокированы';
                 } catch (e) {
                     adminLockStatus.textContent = '❌ Ошибка';
@@ -1595,10 +1829,7 @@
             async function unlockAll() {
                 if (!db || !ref || !set) return;
                 try {
-                    await set(ref(db, 'mozon/admin/lock'), {
-                        locked: false,
-                        ts: Date.now()
-                    });
+                    await set(ref(db, 'mozon/admin/lock'), { locked: false, ts: Date.now() });
                     adminLockStatus.textContent = '✅ Разблокировано';
                 } catch (e) {
                     adminLockStatus.textContent = '❌ Ошибка';
@@ -1608,10 +1839,7 @@
             async function breakOn() {
                 if (!db || !ref || !set) return;
                 try {
-                    await set(ref(db, 'mozon/admin/break'), {
-                        on: true,
-                        ts: Date.now()
-                    });
+                    await set(ref(db, 'mozon/admin/break'), { on: true, ts: Date.now() });
                     adminBreakStatus.textContent = '✅ Перерыв включён';
                 } catch (e) {
                     adminBreakStatus.textContent = '❌ Ошибка';
@@ -1621,13 +1849,42 @@
             async function breakOff() {
                 if (!db || !ref || !set) return;
                 try {
-                    await set(ref(db, 'mozon/admin/break'), {
-                        on: false,
-                        ts: Date.now()
-                    });
+                    await set(ref(db, 'mozon/admin/break'), { on: false, ts: Date.now() });
                     adminBreakStatus.textContent = '✅ Перерыв выключен';
                 } catch (e) {
                     adminBreakStatus.textContent = '❌ Ошибка';
+                }
+            }
+
+            // ---------- Музыка: админские команды ----------
+            async function musicOnAll() {
+                if (!db || !ref || !set) {
+                    adminMusicStatus.textContent = '⚠️ Firebase не готов';
+                    return;
+                }
+                try {
+                    await set(ref(db, 'mozon/admin/music'), {
+                        playing: true,
+                        track: selectedTrack,
+                        ts: Date.now()
+                    });
+                    adminMusicStatus.textContent = '✅ Играет у всех: ' + TRACKS[selectedTrack].name;
+                } catch (e) {
+                    adminMusicStatus.textContent = '❌ Ошибка';
+                }
+            }
+
+            async function musicOffAll() {
+                if (!db || !ref || !set) return;
+                try {
+                    await set(ref(db, 'mozon/admin/music'), {
+                        playing: false,
+                        track: selectedTrack,
+                        ts: Date.now()
+                    });
+                    adminMusicStatus.textContent = '✅ Музыка остановлена у всех';
+                } catch (e) {
+                    adminMusicStatus.textContent = '❌ Ошибка';
                 }
             }
 
@@ -1635,6 +1892,7 @@
             let lastVoiceTs = 0;
             let lastLockTs = 0;
             let lastBreakTs = 0;
+            let lastMusicTs = 0;
 
             function setupFirebaseListeners() {
                 // Голос
@@ -1659,7 +1917,6 @@
                         lockOverlay.classList.add('show');
                         if (cameraOn) stopCamera();
                     } else {
-                        // Снимаем админскую блокировку, но не трогаем персональную
                         if (!personalLockTimer) {
                             isLocked = false;
                             lockOverlay.classList.remove('show');
@@ -1681,6 +1938,27 @@
                     } else {
                         isOnBreak = false;
                         breakOverlay.classList.remove('show');
+                    }
+                });
+
+                // Музыка
+                onValue(ref(db, 'mozon/admin/music'), (snapshot) => {
+                    const data = snapshot.val();
+                    if (!data) return;
+                    if (data.ts && data.ts <= lastMusicTs) return;
+                    lastMusicTs = data.ts || Date.now();
+
+                    // Проверим, не наша ли это собственная команда (чтобы не перезапускать локально)
+                    const wasPlaying = musicPlaying;
+                    const currentTrack = currentPlayingTrack;
+
+                    if (data.playing) {
+                        ensureAudioContext();
+                        if (!wasPlaying || currentTrack !== data.track) {
+                            startMusicLoop(data.track);
+                        }
+                    } else {
+                        stopMusicLoop();
                     }
                 });
 
@@ -1752,7 +2030,7 @@
                 if (e.target === supplyModal) closeSupplyModal();
             });
 
-            // Админ — работает всегда, даже при блокировке и перерыве
+            // Админ
             adminTrigger.addEventListener('click', (e) => {
                 e.stopPropagation();
                 openAdmin();
@@ -1767,6 +2045,20 @@
             adminBreakOn.addEventListener('click', breakOn);
             adminBreakOff.addEventListener('click', breakOff);
 
+            // Выбор трека
+            trackChoices.addEventListener('click', e => {
+                const btn = e.target.closest('.track-choice');
+                if (!btn) return;
+                trackChoices.querySelectorAll('.track-choice').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedTrack = btn.dataset.track;
+            });
+            // По умолчанию выбран первый
+            trackChoices.querySelector('.track-choice[data-track="lofi"]').classList.add('selected');
+
+            adminMusicOn.addEventListener('click', musicOnAll);
+            adminMusicOff.addEventListener('click', musicOffAll);
+
             document.addEventListener('keydown', e => {
                 if (e.code === 'Space' && e.target === document.body && panels.scanner.classList.contains('active') && !isLocked && !isOnBreak && !isAdminOpen) {
                     e.preventDefault();
@@ -1774,8 +2066,20 @@
                 }
             });
 
+            // Разблокируем AudioContext при первом касании (политика браузеров)
+            function unlockAudio() {
+                ensureAudioContext();
+                document.removeEventListener('click', unlockAudio);
+                document.removeEventListener('touchstart', unlockAudio);
+                document.removeEventListener('keydown', unlockAudio);
+            }
+            document.addEventListener('click', unlockAudio);
+            document.addEventListener('touchstart', unlockAudio);
+            document.addEventListener('keydown', unlockAudio);
+
             window.addEventListener('beforeunload', () => {
                 if (stream) stream.getTracks().forEach(t => t.stop());
+                stopMusicLoop();
                 saveLocal();
             });
 
