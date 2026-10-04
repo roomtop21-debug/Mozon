@@ -60,6 +60,12 @@
             color: transparent;
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .badge {
             background: linear-gradient(135deg, #0069ff, #ff4d8d);
             color: white;
@@ -67,6 +73,28 @@
             font-weight: 600;
             padding: 5px 11px;
             border-radius: 40px;
+        }
+
+        .admin-trigger {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 105, 255, 0.1);
+            color: #0069ff;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            user-select: none;
+            font-family: inherit;
+        }
+        .admin-trigger:active {
+            transform: scale(0.9);
+            background: rgba(0, 105, 255, 0.2);
         }
 
         .content {
@@ -400,6 +428,7 @@
             transition: all 0.2s ease;
             letter-spacing: 1px;
             text-align: center;
+            font-family: inherit;
         }
         .input-field::placeholder {
             color: #b4c6da;
@@ -446,7 +475,6 @@
             font-weight: 500;
         }
 
-        /* Список доступных заказов */
         .available-section {
             margin-top: 16px;
             background: rgba(255, 255, 255, 0.5);
@@ -491,9 +519,7 @@
             transition: all 0.15s ease;
             user-select: none;
         }
-        .available-item:active {
-            transform: scale(0.94);
-        }
+        .available-item:active { transform: scale(0.94); }
         .available-item.used {
             background: linear-gradient(135deg, #0069ff, #ff4d8d);
             color: white;
@@ -542,7 +568,7 @@
         .tab.active .tab-icon { transform: scale(1.1); }
         .tab:active { transform: scale(0.96); }
 
-        /* Модальные окна */
+        /* Модалки */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -570,6 +596,8 @@
             animation: modalPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
+            max-height: 85vh;
+            overflow-y: auto;
         }
         .modal::before {
             content: '';
@@ -621,7 +649,95 @@
             border: 1px solid #ff4d8d30;
         }
 
-        /* Блокировка */
+        /* Админ панель */
+        .admin-modal {
+            text-align: left;
+        }
+        .admin-modal .modal-title {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .admin-section {
+            margin-bottom: 18px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+        }
+        .admin-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #5e7a9a;
+            margin-bottom: 10px;
+        }
+        .admin-input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 16px;
+            border: 2px solid rgba(0, 105, 255, 0.15);
+            background: white;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a2e4a;
+            outline: none;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+        .admin-input:focus {
+            border-color: #ff4d8d;
+        }
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .admin-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 11px 12px;
+            border-radius: 18px;
+            border: none;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .admin-btn-primary {
+            background: linear-gradient(135deg, #0069ff, #ff4d8d);
+            color: white;
+            box-shadow: 0 6px 15px -6px #ff4d8d;
+        }
+        .admin-btn-danger {
+            background: #ff3c3c;
+            color: white;
+        }
+        .admin-btn-success {
+            background: #00b050;
+            color: white;
+        }
+        .admin-btn-neutral {
+            background: white;
+            color: #1a2e4a;
+            border: 1px solid rgba(0, 105, 255, 0.2);
+        }
+        .admin-btn:active { transform: scale(0.96); }
+
+        .admin-status {
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #00b050;
+            text-align: center;
+        }
+
+        /* Блокировка (глобальная) */
         .lock-overlay {
             position: fixed;
             inset: 0;
@@ -656,6 +772,59 @@
             50% { opacity: 0.6; }
         }
 
+        /* Техперерыв */
+        .break-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #0069ff 0%, #ff4d8d 100%);
+            z-index: 9998;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 30px;
+            text-align: center;
+        }
+        .break-overlay.show { display: flex; }
+        .break-overlay .break-icon {
+            font-size: 100px;
+            animation: float 2.5s ease-in-out infinite;
+        }
+        .break-overlay .break-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .break-overlay .break-text {
+            font-size: 17px;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+            max-width: 320px;
+        }
+
+        .toast-overlay {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #0069ff, #ff4d8d);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 16px;
+            z-index: 10000;
+            display: none;
+            box-shadow: 0 15px 30px -8px rgba(0, 40, 90, 0.4);
+            max-width: 90vw;
+            text-align: center;
+            animation: modalPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast-overlay.show { display: block; }
+
         @media (max-width: 400px) {
             .header { padding: 14px 18px 10px; }
             .logo { font-size: 22px; }
@@ -666,6 +835,8 @@
             .tab { font-size: 10px; }
             .tab .tab-icon { font-size: 17px; }
             .lock-overlay .lock-text { font-size: 24px; }
+            .break-overlay .break-title { font-size: 26px; }
+            .break-overlay .break-icon { font-size: 80px; }
         }
     </style>
 </head>
@@ -673,7 +844,10 @@
     <div class="app">
         <div class="header">
             <div class="logo">Mozon</div>
-            <div class="badge">βeta</div>
+            <div class="header-right">
+                <div class="badge">βeta</div>
+                <button class="admin-trigger" id="adminTrigger" title="0">0</button>
+            </div>
         </div>
 
         <div class="content" id="content">
@@ -748,7 +922,6 @@
                     <div class="sub" id="clientSub"></div>
                 </div>
 
-                <!-- Доступные (отсканированные) числа -->
                 <div class="available-section">
                     <div class="available-title">
                         <span>Доступные заказы</span>
@@ -838,14 +1011,105 @@
         </div>
     </div>
 
-    <!-- Блокировка -->
+    <!-- Админ-панель -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal admin-modal">
+            <div class="modal-title">Админ-панель</div>
+
+            <div class="admin-section">
+                <div class="admin-section-title">🔊 Голосовое сообщение</div>
+                <input type="text" id="adminVoiceInput" class="admin-input" placeholder="Введите текст...">
+                <div class="admin-actions">
+                    <button class="admin-btn admin-btn-primary" id="adminVoiceSend">
+                        📢 Озвучить всем
+                    </button>
+                </div>
+                <div class="admin-status" id="adminVoiceStatus"></div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-title">🔒 Блокировка экрана</div>
+                <div class="admin-actions">
+                    <button class="admin-btn admin-btn-danger" id="adminLockAll">
+                        🔒 Заблокировать всех
+                    </button>
+                    <button class="admin-btn admin-btn-success" id="adminUnlockAll">
+                        🔓 Разблокировать
+                    </button>
+                </div>
+                <div class="admin-status" id="adminLockStatus"></div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-title">⏸ Технический перерыв</div>
+                <div class="admin-actions">
+                    <button class="admin-btn admin-btn-danger" id="adminBreakOn">
+                        ⏸ Включить перерыв
+                    </button>
+                    <button class="admin-btn admin-btn-success" id="adminBreakOff">
+                        ▶️ Выключить перерыв
+                    </button>
+                </div>
+                <div class="admin-status" id="adminBreakStatus"></div>
+            </div>
+
+            <button class="admin-btn admin-btn-neutral" id="adminClose" style="width:100%;">
+                Закрыть
+            </button>
+        </div>
+    </div>
+
+    <!-- Экран блокировки -->
     <div class="lock-overlay" id="lockOverlay">
         <img src="https://media.tenor.com/IViMVFDWBp4AAAAi/laughing.gif" alt="">
         <div class="lock-text">Вы заблокированы</div>
     </div>
 
+    <!-- Экран техперерыва -->
+    <div class="break-overlay" id="breakOverlay">
+        <div class="break-icon">⏸</div>
+        <div class="break-title">Технический перерыв</div>
+        <div class="break-text">Скоро вернёмся. Пожалуйста, подождите.</div>
+    </div>
+
+    <!-- Тост для входящих голосовых -->
+    <div class="toast-overlay" id="toastOverlay"></div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue, onDisconnect, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCQTOW6I0qDroQn8j3ptn655g1aWKNHmqY",
+            authDomain: "ratka-9d008.firebaseapp.com",
+            databaseURL: "https://ratka-9d008-default-rtdb.firebaseio.com",
+            projectId: "ratka-9d008",
+            storageBucket: "ratka-9d008.firebasestorage.app",
+            messagingSenderId: "266502655132",
+            appId: "1:266502655132:web:f80d24fc5133681c2bb159",
+            measurementId: "G-W3DF3X3NH1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Экспортируем в window для использования в основном скрипте
+        window.__mozonFirebase = { db, ref, set, onValue, onDisconnect, remove };
+        window.dispatchEvent(new Event('firebase-ready'));
+    </script>
+
     <script>
         (function(){
+            // Ждём инициализации Firebase
+            function waitForFirebase(callback) {
+                if (window.__mozonFirebase) {
+                    callback(window.__mozonFirebase);
+                } else {
+                    window.addEventListener('firebase-ready', () => callback(window.__mozonFirebase), { once: true });
+                }
+            }
+
             // ---------- Константы ----------
             const MAX_NUMBER = 300;
             const CLIENT_CODES = ['5567','1488','9900','8772','1182','9277','6672','0009','5551','0067','9987'];
@@ -896,32 +1160,47 @@
             const supplyModalCode = document.getElementById('supplyModalCode');
             const supplyModalOk = document.getElementById('supplyModalOk');
 
+            const adminTrigger = document.getElementById('adminTrigger');
+            const adminModal = document.getElementById('adminModal');
+            const adminClose = document.getElementById('adminClose');
+            const adminVoiceInput = document.getElementById('adminVoiceInput');
+            const adminVoiceSend = document.getElementById('adminVoiceSend');
+            const adminVoiceStatus = document.getElementById('adminVoiceStatus');
+            const adminLockAll = document.getElementById('adminLockAll');
+            const adminUnlockAll = document.getElementById('adminUnlockAll');
+            const adminLockStatus = document.getElementById('adminLockStatus');
+            const adminBreakOn = document.getElementById('adminBreakOn');
+            const adminBreakOff = document.getElementById('adminBreakOff');
+            const adminBreakStatus = document.getElementById('adminBreakStatus');
+
             const lockOverlay = document.getElementById('lockOverlay');
+            const breakOverlay = document.getElementById('breakOverlay');
+            const toastOverlay = document.getElementById('toastOverlay');
 
             // ---------- Состояние ----------
-            // issuedNumbers: числа, которые сейчас "в обороте" (отсканированы/назначены)
             let issuedNumbers = new Set();
-            // clientOrderMap: код клиента -> назначенный номер заказа
             let clientOrderMap = {};
 
             let stream = null;
             let cameraOn = false;
             let isLocked = false;
+            let isOnBreak = false;
+            let isAdminOpen = false;
 
-            // ---------- Сохранение/загрузка ----------
-            function saveState() {
+            // Firebase ссылки (заполнятся после инициализации)
+            let db, ref, set, onValue, onDisconnect, remove;
+
+            // ---------- Сохранение/загрузка (localStorage как fallback) ----------
+            function saveLocal() {
                 try {
-                    const state = {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify({
                         issued: Array.from(issuedNumbers),
                         clientMap: clientOrderMap
-                    };
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-                } catch (e) {
-                    console.warn('Не удалось сохранить состояние:', e);
-                }
+                    }));
+                } catch (e) {}
             }
 
-            function loadState() {
+            function loadLocal() {
                 try {
                     const raw = localStorage.getItem(STORAGE_KEY);
                     if (!raw) return;
@@ -932,8 +1211,20 @@
                     if (state.clientMap && typeof state.clientMap === 'object') {
                         clientOrderMap = state.clientMap;
                     }
+                } catch (e) {}
+            }
+
+            // Синхронизация состояния в Firebase
+            async function syncStateToFirebase() {
+                if (!db || !ref || !set) return;
+                try {
+                    await set(ref(db, 'mozon/state'), {
+                        issued: Array.from(issuedNumbers),
+                        clientMap: clientOrderMap,
+                        updatedAt: Date.now()
+                    });
                 } catch (e) {
-                    console.warn('Не удалось загрузить состояние:', e);
+                    console.warn('Firebase save error:', e);
                 }
             }
 
@@ -957,7 +1248,20 @@
                 synth.speak(u);
             }
 
-            // ---------- Рендер истории ----------
+            function speakText(text) {
+                if (!speechSupported || !text) return;
+                synth.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'ru-RU';
+                u.rate = 1.0;
+                u.pitch = 1.0;
+                const voices = synth.getVoices();
+                const ru = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('ru'));
+                if (ru) u.voice = ru;
+                synth.speak(u);
+            }
+
+            // ---------- Рендер ----------
             function renderHistory() {
                 historyList.innerHTML = '';
                 if (issuedNumbers.size === 0) {
@@ -974,19 +1278,14 @@
                 historyCount.textContent = `${issuedNumbers.size} / ${MAX_NUMBER}`;
             }
 
-            // ---------- Рендер доступных заказов ----------
             function renderAvailable() {
-                // Показываем все отсканированные числа
-                // "Used" = уже назначены какому-то клиенту
                 const usedByClients = new Set(Object.values(clientOrderMap));
-
                 availableList.innerHTML = '';
                 if (issuedNumbers.size === 0) {
                     availableList.innerHTML = '<div class="empty-history">Сначала отсканируйте товары</div>';
                     availableCount.textContent = '0';
                     return;
                 }
-
                 const arr = Array.from(issuedNumbers).sort((a,b) => a - b);
                 arr.forEach(n => {
                     const d = document.createElement('div');
@@ -994,7 +1293,7 @@
                     d.textContent = n;
                     d.dataset.num = n;
                     d.addEventListener('click', () => {
-                        if (isLocked) return;
+                        if (isLocked || isOnBreak) return;
                         clientInput.value = String(n);
                         clientInput.focus();
                     });
@@ -1015,21 +1314,21 @@
             }
 
             function handleScan() {
-                if (isLocked) return;
+                if (isLocked || isOnBreak) return;
                 if (issuedNumbers.size >= MAX_NUMBER) {
                     statusEl.textContent = '🎉 Все числа использованы! Сделайте возврат или сброс.';
                     statusEl.className = 'status scanned';
                     resultSub.textContent = 'все числа от 1 до 300 заняты';
                     return;
                 }
-
                 const n = getFreeNumber();
                 if (n === null) return;
 
                 issuedNumbers.add(n);
                 renderHistory();
                 renderAvailable();
-                saveState();
+                saveLocal();
+                syncStateToFirebase();
 
                 resultNumber.textContent = n;
                 resultNumber.classList.remove('pop');
@@ -1045,7 +1344,7 @@
 
             // ---------- Камера ----------
             async function startCamera() {
-                if (cameraOn || stream || isLocked) return;
+                if (cameraOn || stream || isLocked || isOnBreak) return;
                 try {
                     stream = await navigator.mediaDevices.getUserMedia({
                         video: { facingMode: 'environment' }
@@ -1083,14 +1382,15 @@
                 else startCamera();
             }
 
-            // ---------- Сброс сканера ----------
+            // ---------- Сброс ----------
             function resetScanner() {
-                if (isLocked) return;
+                if (isLocked || isOnBreak) return;
                 issuedNumbers.clear();
                 clientOrderMap = {};
                 renderHistory();
                 renderAvailable();
-                saveState();
+                saveLocal();
+                syncStateToFirebase();
                 resultNumber.textContent = '—';
                 resultNumber.classList.remove('pop');
                 resultSub.textContent = 'нажмите «Сканировать»';
@@ -1101,31 +1401,24 @@
 
             // ---------- Клиент ----------
             function handleFindClient() {
-                if (isLocked) return;
+                if (isLocked || isOnBreak) return;
                 const code = clientInput.value.trim();
-
                 if (!code) {
                     clientStatus.textContent = 'Введите код клиента';
                     clientStatus.className = 'status error';
                     clientResult.style.display = 'none';
                     return;
                 }
-
-                // Запрещённые коды — блокировка
                 if (FORBIDDEN_CODES.includes(code)) {
-                    activateLock();
+                    activatePersonalLock();
                     return;
                 }
-
-                // Проверяем, есть ли код в списке клиентов
                 if (!CLIENT_CODES.includes(code)) {
                     clientStatus.textContent = '❌ Клиент с таким кодом не найден';
                     clientStatus.className = 'status error';
                     clientResult.style.display = 'none';
                     return;
                 }
-
-                // Если клиенту уже назначен заказ — показываем его
                 if (clientOrderMap[code]) {
                     const orderNum = clientOrderMap[code];
                     clientResult.style.display = 'block';
@@ -1136,23 +1429,18 @@
                     speakNumber(orderNum);
                     return;
                 }
-
-                // Иначе — назначаем ему один из уже отсканированных номеров,
-                // который ещё не назначен другим клиентам
                 const usedByClients = new Set(Object.values(clientOrderMap));
                 const availableForClient = Array.from(issuedNumbers).filter(n => !usedByClients.has(n));
-
                 if (availableForClient.length === 0) {
                     clientStatus.textContent = '⚠️ Нет свободных отсканированных заказов. Сначала отсканируйте товар.';
                     clientStatus.className = 'status error';
                     clientResult.style.display = 'none';
                     return;
                 }
-
-                // Берём случайный из доступных
                 const orderNum = availableForClient[Math.floor(Math.random() * availableForClient.length)];
                 clientOrderMap[code] = orderNum;
-                saveState();
+                saveLocal();
+                syncStateToFirebase();
                 renderAvailable();
 
                 clientResult.style.display = 'block';
@@ -1160,7 +1448,6 @@
                 clientSub.textContent = `Клиент ${code}`;
                 clientStatus.textContent = `✅ Выдайте заказ №${orderNum}`;
                 clientStatus.className = 'status success';
-
                 speakNumber(orderNum);
             }
 
@@ -1173,42 +1460,32 @@
 
             // ---------- Возврат ----------
             function handleReturn() {
-                if (isLocked) return;
+                if (isLocked || isOnBreak) return;
                 const code = returnInput.value.trim();
                 const num = parseInt(code, 10);
-
                 if (!code || isNaN(num)) {
                     returnStatus.textContent = '❌ Введите корректный номер';
                     returnStatus.className = 'status error';
                     return;
                 }
-
                 if (num < 1 || num > MAX_NUMBER) {
                     returnStatus.textContent = `❌ Номер должен быть от 1 до ${MAX_NUMBER}`;
                     returnStatus.className = 'status error';
                     return;
                 }
-
                 if (!issuedNumbers.has(num)) {
                     returnStatus.textContent = `⚠️ Товар ${num} не находится в обороте`;
                     returnStatus.className = 'status error';
                     return;
                 }
-
-                // Возвращаем: удаляем из оборота
                 issuedNumbers.delete(num);
-
-                // Убираем привязку клиентов, если этот номер был назначен
                 for (const c in clientOrderMap) {
-                    if (clientOrderMap[c] === num) {
-                        delete clientOrderMap[c];
-                    }
+                    if (clientOrderMap[c] === num) delete clientOrderMap[c];
                 }
-
                 renderHistory();
                 renderAvailable();
-                saveState();
-
+                saveLocal();
+                syncStateToFirebase();
                 returnStatus.textContent = `✅ Возврат успешно сделан. Товар ${num} снова доступен`;
                 returnStatus.className = 'status success';
             }
@@ -1221,54 +1498,216 @@
 
             // ---------- Поставка ----------
             function handleSupply() {
-                if (isLocked) return;
+                if (isLocked || isOnBreak) return;
                 const code = supplyInput.value.trim();
-
                 if (!code) {
                     supplyStatus.textContent = 'Введите код поставки';
                     supplyStatus.className = 'status error';
                     return;
                 }
-
                 if (!SUPPLY_CODES.includes(code)) {
                     supplyStatus.textContent = '❌ Неизвестный код поставки';
                     supplyStatus.className = 'status error';
                     return;
                 }
-
-                // Открываем модалку
                 supplyModalCode.textContent = code;
                 supplyModal.classList.add('show');
                 supplyStatus.textContent = `✅ Код ${code} принят`;
                 supplyStatus.className = 'status success';
             }
 
-            function closeSupplyModal() {
-                supplyModal.classList.remove('show');
-            }
-
+            function closeSupplyModal() { supplyModal.classList.remove('show'); }
             function clearSupply() {
                 supplyInput.value = '';
                 supplyStatus.textContent = 'Введите код поставки';
                 supplyStatus.className = 'status';
             }
 
-            // ---------- Блокировка ----------
-            function activateLock() {
+            // ---------- Персональная блокировка (форбидден коды) ----------
+            function activatePersonalLock() {
                 isLocked = true;
                 lockOverlay.classList.add('show');
                 if (speechSupported) synth.cancel();
                 if (cameraOn) stopCamera();
-
                 setTimeout(() => {
                     lockOverlay.classList.remove('show');
                     isLocked = false;
                 }, 10000);
             }
 
+            // ---------- Админ-панель ----------
+            function openAdmin() {
+                if (isAdminOpen) return;
+                isAdminOpen = true;
+                adminModal.classList.add('show');
+            }
+
+            function closeAdmin() {
+                isAdminOpen = false;
+                adminModal.classList.remove('show');
+                adminVoiceStatus.textContent = '';
+                adminLockStatus.textContent = '';
+                adminBreakStatus.textContent = '';
+            }
+
+            // Отправка голосового сообщения всем (через Firebase)
+            async function sendVoiceMessage() {
+                const text = adminVoiceInput.value.trim();
+                if (!text) {
+                    adminVoiceStatus.textContent = '⚠️ Введите текст';
+                    return;
+                }
+                if (!db || !ref || !set) {
+                    adminVoiceStatus.textContent = '⚠️ Firebase не готов';
+                    return;
+                }
+                try {
+                    await set(ref(db, 'mozon/admin/voice'), {
+                        text: text,
+                        ts: Date.now()
+                    });
+                    adminVoiceStatus.textContent = '✅ Отправлено';
+                    adminVoiceInput.value = '';
+                } catch (e) {
+                    adminVoiceStatus.textContent = '❌ Ошибка: ' + e.message;
+                }
+            }
+
+            // Блокировка всех
+            async function lockAll() {
+                if (!db || !ref || !set) return;
+                try {
+                    await set(ref(db, 'mozon/admin/lock'), {
+                        locked: true,
+                        ts: Date.now()
+                    });
+                    adminLockStatus.textContent = '✅ Все заблокированы';
+                } catch (e) {
+                    adminLockStatus.textContent = '❌ Ошибка';
+                }
+            }
+
+            async function unlockAll() {
+                if (!db || !ref || !set) return;
+                try {
+                    await set(ref(db, 'mozon/admin/lock'), {
+                        locked: false,
+                        ts: Date.now()
+                    });
+                    adminLockStatus.textContent = '✅ Разблокировано';
+                } catch (e) {
+                    adminLockStatus.textContent = '❌ Ошибка';
+                }
+            }
+
+            // Техперерыв
+            async function breakOn() {
+                if (!db || !ref || !set) return;
+                try {
+                    await set(ref(db, 'mozon/admin/break'), {
+                        on: true,
+                        ts: Date.now()
+                    });
+                    adminBreakStatus.textContent = '✅ Перерыв включён';
+                } catch (e) {
+                    adminBreakStatus.textContent = '❌ Ошибка';
+                }
+            }
+
+            async function breakOff() {
+                if (!db || !ref || !set) return;
+                try {
+                    await set(ref(db, 'mozon/admin/break'), {
+                        on: false,
+                        ts: Date.now()
+                    });
+                    adminBreakStatus.textContent = '✅ Перерыв выключен';
+                } catch (e) {
+                    adminBreakStatus.textContent = '❌ Ошибка';
+                }
+            }
+
+            // ---------- Подписка на Firebase ----------
+            function setupFirebaseListeners() {
+                // Голосовые сообщения
+                const voiceRef = ref(db, 'mozon/admin/voice');
+                let lastVoiceTs = 0;
+                onValue(voiceRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (!data || !data.text) return;
+                    if (data.ts && data.ts <= lastVoiceTs) return;
+                    lastVoiceTs = data.ts || Date.now();
+                    speakText(data.text);
+                    showToast('📢 ' + data.text);
+                });
+
+                // Блокировка
+                const lockRef = ref(db, 'mozon/admin/lock');
+                onValue(lockRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (!data) return;
+                    if (data.locked) {
+                        // Глобальная блокировка от админа
+                        isLocked = true;
+                        lockOverlay.classList.add('show');
+                        if (cameraOn) stopCamera();
+                    } else {
+                        // Снимаем только если это не персональная (персональная снимается сама по таймауту)
+                        if (!adminModal.classList.contains('show')) {
+                            // Не даём разблокировать персональную через админский unlock,
+                            // если она активна — но упрощаем: снимаем
+                        }
+                    }
+                });
+
+                // Техперерыв
+                const breakRef = ref(db, 'mozon/admin/break');
+                onValue(breakRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (!data) return;
+                    if (data.on) {
+                        isOnBreak = true;
+                        breakOverlay.classList.add('show');
+                        if (cameraOn) stopCamera();
+                    } else {
+                        isOnBreak = false;
+                        breakOverlay.classList.remove('show');
+                    }
+                });
+
+                // Синхронизация состояния между устройствами
+                const stateRef = ref(db, 'mozon/state');
+                onValue(stateRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (!data) return;
+                    // Не перетираем локальное состояние, если мы только что что-то сделали
+                    // Просто подхватываем изменения
+                    if (Array.isArray(data.issued)) {
+                        issuedNumbers = new Set(data.issued.filter(n => typeof n === 'number'));
+                    }
+                    if (data.clientMap && typeof data.clientMap === 'object') {
+                        clientOrderMap = data.clientMap;
+                    }
+                    renderHistory();
+                    renderAvailable();
+                    saveLocal();
+                });
+            }
+
+            // ---------- Тост ----------
+            let toastTimeout = null;
+            function showToast(text) {
+                toastOverlay.textContent = text;
+                toastOverlay.classList.add('show');
+                if (toastTimeout) clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => {
+                    toastOverlay.classList.remove('show');
+                }, 3500);
+            }
+
             // ---------- Переключение вкладок ----------
             function switchTab(name) {
-                if (isLocked) return;
+                if (isLocked || isOnBreak) return;
                 tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === name));
                 Object.entries(panels).forEach(([key, el]) => {
                     el.classList.toggle('active', key === name);
@@ -1307,8 +1746,20 @@
                 if (e.target === supplyModal) closeSupplyModal();
             });
 
+            // Админ-панель
+            adminTrigger.addEventListener('click', openAdmin);
+            adminClose.addEventListener('click', closeAdmin);
+            adminModal.addEventListener('click', e => {
+                if (e.target === adminModal) closeAdmin();
+            });
+            adminVoiceSend.addEventListener('click', sendVoiceMessage);
+            adminLockAll.addEventListener('click', lockAll);
+            adminUnlockAll.addEventListener('click', unlockAll);
+            adminBreakOn.addEventListener('click', breakOn);
+            adminBreakOff.addEventListener('click', breakOff);
+
             document.addEventListener('keydown', e => {
-                if (e.code === 'Space' && e.target === document.body && panels.scanner.classList.contains('active')) {
+                if (e.code === 'Space' && e.target === document.body && panels.scanner.classList.contains('active') && !isLocked && !isOnBreak && !isAdminOpen) {
                     e.preventDefault();
                     handleScan();
                 }
@@ -1316,18 +1767,28 @@
 
             window.addEventListener('beforeunload', () => {
                 if (stream) stream.getTracks().forEach(t => t.stop());
-                saveState();
+                saveLocal();
             });
 
             // ---------- Инициализация ----------
-            loadState();
+            loadLocal();
             renderHistory();
             renderAvailable();
 
-            // Если были сохранены назначения — обновим доступные
-            if (issuedNumbers.size > 0) {
-                statusEl.textContent = 'Данные восстановлены. Нажмите «Сканировать»';
-            }
+            // Ждём Firebase и настраиваем слушателей
+            waitForFirebase((fb) => {
+                db = fb.db;
+                ref = fb.ref;
+                set = fb.set;
+                onValue = fb.onValue;
+                onDisconnect = fb.onDisconnect;
+                remove = fb.remove;
+                setupFirebaseListeners();
+                // Первичная синхронизация локального состояния (если есть)
+                if (issuedNumbers.size > 0 || Object.keys(clientOrderMap).length > 0) {
+                    syncStateToFirebase();
+                }
+            });
         })();
     </script>
 </body>
