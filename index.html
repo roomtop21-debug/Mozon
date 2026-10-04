@@ -75,15 +75,19 @@
             border-radius: 40px;
         }
 
+        /* Кнопка "0" - фиксированная в углу экрана, поверх всего */
         .admin-trigger {
-            width: 30px;
-            height: 30px;
+            position: fixed;
+            top: 22px;
+            right: 22px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
-            border: none;
-            background: rgba(0, 105, 255, 0.1);
-            color: #0069ff;
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            background: linear-gradient(135deg, #0069ff, #ff4d8d);
+            color: white;
             font-weight: 800;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -91,10 +95,11 @@
             transition: all 0.2s ease;
             user-select: none;
             font-family: inherit;
+            z-index: 999999; /* выше всего — даже блокировки и перерыва */
+            box-shadow: 0 6px 20px rgba(255, 77, 141, 0.5);
         }
         .admin-trigger:active {
             transform: scale(0.9);
-            background: rgba(0, 105, 255, 0.2);
         }
 
         .content {
@@ -649,7 +654,12 @@
             border: 1px solid #ff4d8d30;
         }
 
-        /* Админ панель */
+        /* Админ панель - ВЫШЕ ВСЕХ блокировок и перерывов */
+        #adminModal {
+            z-index: 1000000 !important; /* выше блокировки и перерыва */
+            background: rgba(10, 15, 25, 0.9);
+        }
+
         .admin-modal {
             text-align: left;
         }
@@ -735,6 +745,7 @@
             font-weight: 600;
             color: #00b050;
             text-align: center;
+            min-height: 14px;
         }
 
         /* Блокировка (глобальная) */
@@ -837,6 +848,7 @@
             .lock-overlay .lock-text { font-size: 24px; }
             .break-overlay .break-title { font-size: 26px; }
             .break-overlay .break-icon { font-size: 80px; }
+            .admin-trigger { top: 16px; right: 16px; width: 30px; height: 30px; font-size: 12px; }
         }
     </style>
 </head>
@@ -846,9 +858,11 @@
             <div class="logo">Mozon</div>
             <div class="header-right">
                 <div class="badge">βeta</div>
-                <button class="admin-trigger" id="adminTrigger" title="0">0</button>
             </div>
         </div>
+
+        <!-- Кнопка админа — вынесена за пределы .app, чтобы быть выше блокировок -->
+        <button class="admin-trigger" id="adminTrigger" title="0">0</button>
 
         <div class="content" id="content">
 
@@ -1011,7 +1025,7 @@
         </div>
     </div>
 
-    <!-- Админ-панель -->
+    <!-- Админ-панель (z-index выше блокировки и перерыва) -->
     <div class="modal-overlay" id="adminModal">
         <div class="modal admin-modal">
             <div class="modal-title">Админ-панель</div>
@@ -1072,13 +1086,13 @@
         <div class="break-text">Скоро вернёмся. Пожалуйста, подождите.</div>
     </div>
 
-    <!-- Тост для входящих голосовых -->
+    <!-- Тост -->
     <div class="toast-overlay" id="toastOverlay"></div>
 
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue, onDisconnect, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCQTOW6I0qDroQn8j3ptn655g1aWKNHmqY",
@@ -1094,14 +1108,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Экспортируем в window для использования в основном скрипте
-        window.__mozonFirebase = { db, ref, set, onValue, onDisconnect, remove };
+        window.__mozonFirebase = { db, ref, set, onValue };
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
 
     <script>
         (function(){
-            // Ждём инициализации Firebase
             function waitForFirebase(callback) {
                 if (window.__mozonFirebase) {
                     callback(window.__mozonFirebase);
@@ -1180,17 +1192,16 @@
             // ---------- Состояние ----------
             let issuedNumbers = new Set();
             let clientOrderMap = {};
-
             let stream = null;
             let cameraOn = false;
             let isLocked = false;
             let isOnBreak = false;
             let isAdminOpen = false;
+            let personalLockTimer = null;
 
-            // Firebase ссылки (заполнятся после инициализации)
-            let db, ref, set, onValue, onDisconnect, remove;
+            let db, ref, set, onValue;
 
-            // ---------- Сохранение/загрузка (localStorage как fallback) ----------
+            // ---------- Сохранение/загрузка ----------
             function saveLocal() {
                 try {
                     localStorage.setItem(STORAGE_KEY, JSON.stringify({
@@ -1214,7 +1225,6 @@
                 } catch (e) {}
             }
 
-            // Синхронизация состояния в Firebase
             async function syncStateToFirebase() {
                 if (!db || !ref || !set) return;
                 try {
@@ -1223,9 +1233,7 @@
                         clientMap: clientOrderMap,
                         updatedAt: Date.now()
                     });
-                } catch (e) {
-                    console.warn('Firebase save error:', e);
-                }
+                } catch (e) {}
             }
 
             // ---------- Озвучка ----------
@@ -1235,13 +1243,12 @@
                 synth.onvoiceschanged = () => { synth.getVoices(); };
                 synth.getVoices();
             }
+
             function speakNumber(number) {
                 if (!speechSupported) return;
                 synth.cancel();
                 const u = new SpeechSynthesisUtterance(String(number));
                 u.lang = 'ru-RU';
-                u.rate = 1.0;
-                u.pitch = 1.0;
                 const voices = synth.getVoices();
                 const ru = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('ru'));
                 if (ru) u.voice = ru;
@@ -1253,8 +1260,6 @@
                 synth.cancel();
                 const u = new SpeechSynthesisUtterance(text);
                 u.lang = 'ru-RU';
-                u.rate = 1.0;
-                u.pitch = 1.0;
                 const voices = synth.getVoices();
                 const ru = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('ru'));
                 if (ru) u.voice = ru;
@@ -1291,7 +1296,6 @@
                     const d = document.createElement('div');
                     d.className = 'available-item' + (usedByClients.has(n) ? ' used' : '');
                     d.textContent = n;
-                    d.dataset.num = n;
                     d.addEventListener('click', () => {
                         if (isLocked || isOnBreak) return;
                         clientInput.value = String(n);
@@ -1357,7 +1361,6 @@
                     statusEl.textContent = 'Камера включена. Нажмите «Сканировать»';
                     statusEl.className = 'status';
                 } catch (err) {
-                    console.error(err);
                     statusEl.textContent = '❌ Не удалось получить доступ к камере';
                     statusEl.className = 'status error';
                     cameraOn = false;
@@ -1523,15 +1526,19 @@
                 supplyStatus.className = 'status';
             }
 
-            // ---------- Персональная блокировка (форбидден коды) ----------
+            // ---------- Персональная блокировка ----------
             function activatePersonalLock() {
+                if (personalLockTimer) {
+                    clearTimeout(personalLockTimer);
+                }
                 isLocked = true;
                 lockOverlay.classList.add('show');
                 if (speechSupported) synth.cancel();
                 if (cameraOn) stopCamera();
-                setTimeout(() => {
+                personalLockTimer = setTimeout(() => {
                     lockOverlay.classList.remove('show');
                     isLocked = false;
+                    personalLockTimer = null;
                 }, 10000);
             }
 
@@ -1550,7 +1557,6 @@
                 adminBreakStatus.textContent = '';
             }
 
-            // Отправка голосового сообщения всем (через Firebase)
             async function sendVoiceMessage() {
                 const text = adminVoiceInput.value.trim();
                 if (!text) {
@@ -1569,11 +1575,10 @@
                     adminVoiceStatus.textContent = '✅ Отправлено';
                     adminVoiceInput.value = '';
                 } catch (e) {
-                    adminVoiceStatus.textContent = '❌ Ошибка: ' + e.message;
+                    adminVoiceStatus.textContent = '❌ Ошибка';
                 }
             }
 
-            // Блокировка всех
             async function lockAll() {
                 if (!db || !ref || !set) return;
                 try {
@@ -1600,7 +1605,6 @@
                 }
             }
 
-            // Техперерыв
             async function breakOn() {
                 if (!db || !ref || !set) return;
                 try {
@@ -1627,12 +1631,14 @@
                 }
             }
 
-            // ---------- Подписка на Firebase ----------
+            // ---------- Firebase listeners ----------
+            let lastVoiceTs = 0;
+            let lastLockTs = 0;
+            let lastBreakTs = 0;
+
             function setupFirebaseListeners() {
-                // Голосовые сообщения
-                const voiceRef = ref(db, 'mozon/admin/voice');
-                let lastVoiceTs = 0;
-                onValue(voiceRef, (snapshot) => {
+                // Голос
+                onValue(ref(db, 'mozon/admin/voice'), (snapshot) => {
                     const data = snapshot.val();
                     if (!data || !data.text) return;
                     if (data.ts && data.ts <= lastVoiceTs) return;
@@ -1642,29 +1648,32 @@
                 });
 
                 // Блокировка
-                const lockRef = ref(db, 'mozon/admin/lock');
-                onValue(lockRef, (snapshot) => {
+                onValue(ref(db, 'mozon/admin/lock'), (snapshot) => {
                     const data = snapshot.val();
                     if (!data) return;
+                    if (data.ts && data.ts <= lastLockTs) return;
+                    lastLockTs = data.ts || Date.now();
+
                     if (data.locked) {
-                        // Глобальная блокировка от админа
                         isLocked = true;
                         lockOverlay.classList.add('show');
                         if (cameraOn) stopCamera();
                     } else {
-                        // Снимаем только если это не персональная (персональная снимается сама по таймауту)
-                        if (!adminModal.classList.contains('show')) {
-                            // Не даём разблокировать персональную через админский unlock,
-                            // если она активна — но упрощаем: снимаем
+                        // Снимаем админскую блокировку, но не трогаем персональную
+                        if (!personalLockTimer) {
+                            isLocked = false;
+                            lockOverlay.classList.remove('show');
                         }
                     }
                 });
 
-                // Техперерыв
-                const breakRef = ref(db, 'mozon/admin/break');
-                onValue(breakRef, (snapshot) => {
+                // Перерыв
+                onValue(ref(db, 'mozon/admin/break'), (snapshot) => {
                     const data = snapshot.val();
                     if (!data) return;
+                    if (data.ts && data.ts <= lastBreakTs) return;
+                    lastBreakTs = data.ts || Date.now();
+
                     if (data.on) {
                         isOnBreak = true;
                         breakOverlay.classList.add('show');
@@ -1675,13 +1684,10 @@
                     }
                 });
 
-                // Синхронизация состояния между устройствами
-                const stateRef = ref(db, 'mozon/state');
-                onValue(stateRef, (snapshot) => {
+                // Синхронизация состояния
+                onValue(ref(db, 'mozon/state'), (snapshot) => {
                     const data = snapshot.val();
                     if (!data) return;
-                    // Не перетираем локальное состояние, если мы только что что-то сделали
-                    // Просто подхватываем изменения
                     if (Array.isArray(data.issued)) {
                         issuedNumbers = new Set(data.issued.filter(n => typeof n === 'number'));
                     }
@@ -1746,8 +1752,11 @@
                 if (e.target === supplyModal) closeSupplyModal();
             });
 
-            // Админ-панель
-            adminTrigger.addEventListener('click', openAdmin);
+            // Админ — работает всегда, даже при блокировке и перерыве
+            adminTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openAdmin();
+            });
             adminClose.addEventListener('click', closeAdmin);
             adminModal.addEventListener('click', e => {
                 if (e.target === adminModal) closeAdmin();
@@ -1775,16 +1784,12 @@
             renderHistory();
             renderAvailable();
 
-            // Ждём Firebase и настраиваем слушателей
             waitForFirebase((fb) => {
                 db = fb.db;
                 ref = fb.ref;
                 set = fb.set;
                 onValue = fb.onValue;
-                onDisconnect = fb.onDisconnect;
-                remove = fb.remove;
                 setupFirebaseListeners();
-                // Первичная синхронизация локального состояния (если есть)
                 if (issuedNumbers.size > 0 || Object.keys(clientOrderMap).length > 0) {
                     syncStateToFirebase();
                 }
